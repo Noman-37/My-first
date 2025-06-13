@@ -110,4 +110,5 @@ export default function App() {
       </div>
     </div>
   );
-}
+}npx create-react-app med-mcq-app
+cd med-mcq-app
