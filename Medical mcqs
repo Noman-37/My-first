@@ -1,0 +1,113 @@
+import React, { useState } from "react";
+
+const questions = [
+  {
+    question: "Which organ pumps blood throughout the body?",
+    options: ["Lungs", "Liver", "Heart", "Kidneys"],
+    answer: "Heart"
+  },
+  {
+    question: "What is the function of red blood cells?",
+    options: ["Fight infections", "Carry oxygen", "Digest food", "Produce hormones"],
+    answer: "Carry oxygen"
+  },
+  {
+    question: "Which system controls body functions?",
+    options: ["Respiratory", "Digestive", "Nervous", "Circulatory"],
+    answer: "Nervous"
+  },
+  {
+    question: "Where does digestion begin?",
+    options: ["Stomach", "Mouth", "Liver", "Intestines"],
+    answer: "Mouth"
+  },
+  {
+    question: "Which vitamin is made in the skin from sunlight?",
+    options: ["Vitamin A", "Vitamin C", "Vitamin D", "Vitamin K"],
+    answer: "Vitamin D"
+  },
+  // 👉 Add more easy matric-level medical MCQs here up to 50
+];
+
+export default function App() {
+  const [name, setName] = useState("");
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [current, setCurrent] = useState(0);
+  const [selected, setSelected] = useState("");
+  const [score, setScore] = useState(0);
+  const [completed, setCompleted] = useState(false);
+
+  if (!loggedIn) {
+    return (
+      <div className="flex flex-col justify-center items-center h-screen bg-gray-100">
+        <div className="bg-white p-8 rounded shadow-md w-80">
+          <h1 className="text-2xl mb-4">Student Login</h1>
+          <input
+            type="text"
+            className="w-full p-2 border rounded mb-4"
+            placeholder="Enter your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <button
+            className="w-full p-2 bg-blue-500 text-white rounded"
+            onClick={() => name.trim() && setLoggedIn(true)}
+          >
+            Start Test
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (completed) {
+    return (
+      <div className="flex flex-col justify-center items-center h-screen bg-gray-100">
+        <div className="bg-white p-8 rounded shadow-md text-center w-80">
+          <h1 className="text-2xl mb-4">Test Complete</h1>
+          <p className="text-lg">
+            Hello <strong>{name}</strong>, your score is <strong>{score}</strong> out of <strong>{questions.length}</strong>.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const q = questions[current];
+  const handleNext = () => {
+    if (selected === q.answer) setScore(score + 1);
+    if (current + 1 < questions.length) {
+      setCurrent(current + 1);
+      setSelected("");
+    } else {
+      setCompleted(true);
+    }
+  };
+
+  return (
+    <div className="flex flex-col justify-center items-center h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded shadow-md w-96">
+        <h2 className="text-xl mb-4">Question {current + 1} of {questions.length}</h2>
+        <p className="mb-4">{q.question}</p>
+        <div className="grid gap-2">
+          {q.options.map((opt) => (
+            <button
+              key={opt}
+              className={`w-full p-2 text-left border rounded ${selected === opt ? 'bg-blue-200' : ''}`}
+              onClick={() => setSelected(opt)}
+            >
+              {opt}
+            </button>
+          ))}
+        </div>
+        <button
+          className="mt-4 w-full p-2 bg-green-500 text-white rounded disabled:opacity-50"
+          disabled={!selected}
+          onClick={handleNext}
+        >
+          {current + 1 === questions.length ? "Finish" : "Next"}
+        </button>
+      </div>
+    </div>
+  );
+}
